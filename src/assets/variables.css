@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --white-color: #ffffff;
+  --black-color: #424242;
+  --copper-rose-color: #976464;
+  --eunry-color: #cfa5a5;
+
+  /* Typography */
+  --font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+
+  /* Animation */
+  --default-transition: 0.3s ease;
+
+  /* Miscellaneous */
+  --standard-border-radius: 8px;
+}
