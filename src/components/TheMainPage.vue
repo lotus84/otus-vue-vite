@@ -1,8 +1,11 @@
 <script setup>
+import MainIntro from './main-intro/MainIntro.vue';
+import ProductList from './ProductList.vue';
 </script>
 
 <template>
   <div>
-    <p>text</p>
+    <MainIntro />
+    <ProductList />
   </div>
 </template>

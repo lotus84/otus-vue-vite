@@ -50,7 +50,7 @@ const links = ref([
 .wrapper {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 24px;
   width: 100%;
   min-height: 100%;
@@ -63,5 +63,10 @@ const links = ref([
   font-weight: 600;
   line-height: 20px;
   color: var(--white-color);
+  transition: color var(--default-transition);
+
+  &:hover {
+    color: var(--kabul-color);
+  }
 }
 </style>
