@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import ContentContainer from '../ContentContainer.vue';
 
-const title = ref('Пряжа Macrametr');
+const title = ref('Интернет-магазин');
 const text = ref('Повседневная практика показывает, что укрепление и развитие внутренней структуры обеспечивает широкому кругу (специалистов) участие в формировании форм воздействия.');
 </script>
 
