@@ -3,11 +3,15 @@ import { ref } from 'vue';
 import ContentContainer from './ContentContainer.vue';
 import ProductItem from './ProductItem.vue';
 
+defineProps({
+  products: {
+    type: Array,
+    required: true,
+  }
+})
+
 const title = ref('Каталог товаров');
-const products = ref(null);
-fetch('https://fakestoreapi.com/products')
-  .then(response => response.json())
-  .then(data => products.value = data)
+const emptyCatalog = ref('Простите, по вашему запросу товаров сейчас нет.');
 </script>
 
 <template>
@@ -23,6 +27,7 @@ fetch('https://fakestoreapi.com/products')
           <ProductItem :product="product" />
         </li>
       </ul>
+      <p v-if="products.length === 0" :class="$style.emptyCatalog">{{ emptyCatalog }}</p>
     </ContentContainer>
   </div>
 </template>
@@ -31,7 +36,7 @@ fetch('https://fakestoreapi.com/products')
 .root {
   display: flex;
   width: 100%;
-  padding: 24px 0 64px;
+  padding: 24px 0;
 }
 
 .title {
@@ -57,4 +62,13 @@ fetch('https://fakestoreapi.com/products')
   display: flex;
   width: 100%;
 }
+
+.emptyCatalog {
+  margin: 0 auto;
+  font-size: 24px;
+  line-height: 150%;
+  font-weight: 600;
+  text-align: center;
+}
+
 </style>

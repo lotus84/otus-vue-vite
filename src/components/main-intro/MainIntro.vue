@@ -23,7 +23,7 @@ const text = ref('Повседневная практика показывает
 .root {
   display: flex;
   width: 100%;
-  padding: 50px 0;
+  padding: 24px 0;
 }
 
 .wrapper {
