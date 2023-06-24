@@ -1,23 +1,28 @@
 <script setup>
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router'
 import ContentContainer from './ContentContainer.vue';
 
 const links = ref([
   {
     text: 'Каталог',
-    href: '#',
+    href: '/',
+  },
+  {
+    text: 'Корзина',
+    href: '/cart',
   },
   {
     text: 'Оплата и доставка',
-    href: '#',
+    href: '/',
   },
   {
     text: 'О компании',
-    href: '#',
+    href: '/',
   },
   {
     text: 'Контакты',
-    href: '#',
+    href: '/',
   },
 ]);
 </script>
@@ -26,13 +31,14 @@ const links = ref([
   <header :class="$style.root">
     <ContentContainer>
       <nav :class="$style.wrapper">
-        <a
+        <RouterLink
           v-for="link, index in links"
           :key="index"
-          :href="link.href"
-          :class="$style.link">
+          :class="$style.link"
+          :to="link.href"
+        >
           {{ link.text }}
-        </a>
+        </RouterLink>
       </nav>
     </ContentContainer>
   </header>

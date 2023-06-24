@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router'
 import ContentContainer from './ContentContainer.vue';
 
 const contacts = ref([
@@ -11,43 +12,43 @@ const contacts = ref([
 const links = ref([
   {
     text: 'Каталог',
-    href: '#',
+    href: '/',
+  },
+  {
+    text: 'Корзина',
+    href: '/cart',
   },
   {
     text: 'Оплата и доставка',
-    href: '#',
+    href: '/',
   },
   {
     text: 'Акции',
-    href: '#',
+    href: '/',
   },
   {
     text: 'Бонусная программа',
-    href: '#',
+    href: '/',
   },
   {
     text: 'Новинки',
-    href: '#',
+    href: '/',
   },
   {
     text: 'О компании',
-    href: '#',
+    href: '/',
   },
   {
     text: 'Популярное',
-    href: '#',
+    href: '/',
   },
   {
     text: 'Преимущества',
-    href: '#',
+    href: '/',
   },
   {
     text: 'Гарантия и возврат',
-    href: '#',
-  },
-  {
-    text: 'Личный кабинет',
-    href: '#',
+    href: '/',
   },
 ]);
 const copyright = ref('© 2012-2021 SHOP АРТ — официальный интернет-магазин товаров. Все права защищены. Условия использования и политика конфиденциальности');
@@ -72,12 +73,12 @@ const copyright = ref('© 2012-2021 SHOP АРТ — официальный ин�
             :key="index"
             :class="$style.navItem"
           >
-            <a
-              :href="link.href"
+            <RouterLink
+              :to="link.href"
               :class="$style.link"
             >
               {{ link.text }}
-            </a>
+            </RouterLink>
           </li>
         </ul>
         <div :class="$style.info">
