@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --white-color: #ffffff;
+  --black-color: #424242;
+  --snow-color: #faf9f9;
+  --copper-rose-color: #976464;
+  --eunry-color: #cfa5a5;
+  --kabul-color: #5e5c5a;
+  --loafer-color: #ddddbf;
+  --sugar-cane-color: #ececd5;
+  --silver-color: #bdbdbd;
+  --charcoal-color: #444444;
+
+  /* Typography */
+  --font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+
+  /* Animation */
+  --default-transition: 0.3s ease;
+
+  /* Miscellaneous */
+  --standard-border-radius: 8px;
+}

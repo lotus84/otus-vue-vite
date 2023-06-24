@@ -1,35 +1,40 @@
-@import './base.css';
+@import '../../node_modules/destyle.css/destyle.css';
+@import './variables.css';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* montserrat-regular - cyrillic_cyrillic-ext_latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../static/fonts/montserrat-v25-cyrillic_cyrillic-ext_latin-regular.woff2') format('woff2');
+}
 
+/* montserrat-600 - cyrillic_cyrillic-ext_latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../../static/fonts/montserrat-v25-cyrillic_cyrillic-ext_latin-600.woff2') format('woff2');
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
   font-weight: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+body {
+  min-height: 100vh;
+  color: var(--black-color);
+  background-color: var(--snow-color);
+  font-family: var(--font-family);
+  font-size: 18px;
+  line-height: 22px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
