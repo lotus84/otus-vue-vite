@@ -13,25 +13,40 @@ defineProps({
 </script>
 
 <template>
-  <a :class="$style.root" href="#">
-    <div :class="$style.imageBox">
+  <div :class="$style.root">
+    <a :class="$style.link" href="#">
+      <div :class="$style.imageBox">
       <img :src="product.image" alt="">
-    </div>
-    <h3 :class="$style.title">{{ product.title }}</h3>
-    <span :class="$style.price">{{ product.price }}$</span>
+      </div>
+      <h3 :class="$style.title">{{ product.title }}</h3>
+      <span :class="$style.price">{{ product.price }}$</span>
+    </a>
     <BaseButton>{{ buttonText }}</BaseButton>
-  </a>
+  </div>
 </template>
 
 <style module>
 .root {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 30px 20px;
   border-radius: 20px;
   background-color: var(--white-color);
-  box-shadow: 0 0 30px 0 rgba(68, 68, 68, 0.05);
+  box-shadow: 0 0 30px 0 rgba(var(--charcoal-color), 0.05);
+  transition: background-color var(--default-transition);
+
+  &:hover {
+    background-color: var(--loafer-color);
+  }
+}
+
+.link {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  width: 100%;
 }
 
 .imageBox {
