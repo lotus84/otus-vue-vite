@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
+import { RouterLink } from 'vue-router'
 import ContentContainer from './ContentContainer.vue';
 import BaseInput from './base/BaseInput.vue';
 import BaseButton from './base/BaseButton.vue';
@@ -12,6 +13,9 @@ const userInfo = ref('Данные получателя');
 const paymentMethod = ref('Способ оплаты');
 const submitButtonText = ref('Оформить заказ');
 const orderDetails = ref('Подробности заказа');
+const mainPage = ref('на главную страницу');
+const thanksText = ref('Благодарим за покупку!');
+const description = ref('В ближайшее время с вами свяжется менеджер для подтверждения заказа');
 const placeholder = reactive({
   city: 'Город',
   street: 'Улица',
@@ -68,15 +72,51 @@ const form = reactive({
   deliveryMethod: 'post',
 });
 
+let isFormSubmitted = ref(false);
+
 function onSubmit() {
-  return console.log('submit');
+  let orderForm = {
+    city: form.city,
+    street: form.street,
+    houseNumber: form.houseNumber,
+    flatNumber: form.flatNumber,
+    postcode: form.postcode,
+    message: form.message,
+    surname: form.surname,
+    name: form.name,
+    patronymic: form.patronymic,
+    phone: form.phone,
+    email: form.email,
+    isSubscribed: form.isSubscribed,
+    paymentMethod: form.paymentMethod,
+    deliveryMethod: form.deliveryMethod,
+  };
+
+  const requestOptions = {
+    method: 'POST',
+    body: JSON.stringify(orderForm)
+  };
+
+  fetch('https://httpbin.org/post', requestOptions)
+    .then(async response => {
+      if (response.ok) {
+        isFormSubmitted.value = true;
+      }
+    })
+    .catch(error => {
+      console.error('There was an error!', error);
+    });
 };
 </script>
 
 <template>
   <div :class="$style.root">
     <ContentContainer>
-      <form :class="$style.wrapper" @submit.prevent="onSubmit">
+      <form
+        v-if="!isFormSubmitted"
+        :class="$style.wrapper"
+        @submit.prevent="onSubmit"
+      >
         <div :class="$style.column">
           <p :class="$style.title">{{ receiving }}</p>
           <div :class="$style.fieldsRow">
@@ -172,10 +212,20 @@ function onSubmit() {
         <div :class="$style.column">
           <div :class="$style.orderDetails">
             <p :class="$style.title">{{ orderDetails }}</p>
-            <BaseButton>{{ submitButtonText }}</BaseButton>
+            <BaseButton type="submit">{{ submitButtonText }}</BaseButton>
           </div>
         </div>
       </form>
+      <div v-else :class="$style.success">
+        <p :class="$style.thanksText">{{ thanksText }}</p>
+        <p :class="$style.description">{{ description }}</p>
+        <RouterLink
+          :class="$style.link"
+          to="/"
+        >
+          {{ mainPage }}
+        </RouterLink>
+      </div>
     </ContentContainer>
   </div>
 </template>
@@ -234,5 +284,44 @@ function onSubmit() {
   padding: 40px;
   border-radius: 20px;
   background-color: var(--gainsboro-color);
+}
+
+.success {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 40px;
+}
+
+.thanksText {
+  color: var(--black-color);
+  font-size: 28px;
+  line-height: 140%;
+  font-weight: 600;
+  text-align: center;
+}
+
+.description {
+  max-width: 320px;
+  color: var(--black-color);
+  text-align: center;
+  font-size: 16px;
+  line-height: 140%;
+}
+
+.link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 45px;
+  color: var(--white-color);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 50px;
+  background-image: linear-gradient(152deg, var(--copper-rose-color) 0%, var(--eunry-color) 100%);
 }
 </style>
