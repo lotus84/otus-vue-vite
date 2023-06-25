@@ -1,15 +1,9 @@
-<template>
-  <div class="about">
-    <h1>This is an cart page</h1>
-  </div>
-</template>
+<script setup>
+import TheCartPage from '../components/TheCartPage.vue';
+</script>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
+<template>
+  <main>
+    <TheCartPage />
+  </main>
+</template>
