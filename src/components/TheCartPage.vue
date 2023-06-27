@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { RouterLink } from 'vue-router'
+import { createOrderForProducts } from '../api/order';
 import ContentContainer from './ContentContainer.vue';
 import BaseInput from './base/BaseInput.vue';
 import BaseButton from './base/BaseButton.vue';
@@ -74,7 +75,7 @@ const form = reactive({
 
 let isFormSubmitted = ref(false);
 
-function onSubmit() {
+async function onSubmit() {
   let orderForm = {
     city: form.city,
     street: form.street,
@@ -92,20 +93,16 @@ function onSubmit() {
     deliveryMethod: form.deliveryMethod,
   };
 
-  const requestOptions = {
-    method: 'POST',
-    body: JSON.stringify(orderForm)
-  };
+  try {
+    const response = await createOrderForProducts(orderForm);
 
-  fetch('https://httpbin.org/post', requestOptions)
-    .then(async response => {
-      if (response.ok) {
-        isFormSubmitted.value = true;
-      }
-    })
-    .catch(error => {
-      console.error('There was an error!', error);
-    });
+    if (response.ok) {
+      isFormSubmitted.value = true;
+    }
+
+  } catch (error) {
+    console.error('There was an error!', error);
+  }
 };
 </script>
 
