@@ -17,7 +17,7 @@ onMounted(async () => {
 function filteredProducts() {
   return products.value.filter((product) =>
     product.title.toLowerCase().includes(searchText.value.toLowerCase()) ||
-    product.price.toString().includes(searchText.value.toLowerCase())
+    product.price.toString().startsWith(searchText.value.toLowerCase())
   );
 }
 </script>
