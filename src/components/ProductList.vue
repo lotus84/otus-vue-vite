@@ -70,5 +70,4 @@ const emptyCatalog = ref('Простите, по вашему запросу т�
   font-weight: 600;
   text-align: center;
 }
-
 </style>

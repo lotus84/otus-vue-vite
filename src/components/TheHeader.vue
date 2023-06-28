@@ -13,15 +13,15 @@ const links = ref([
     href: '/cart',
   },
   {
+    text: 'Добавить товар',
+    href: '/add-item',
+  },
+  {
     text: 'Оплата и доставка',
     href: '/',
   },
   {
     text: 'О компании',
-    href: '/',
-  },
-  {
-    text: 'Контакты',
     href: '/',
   },
 ]);
