@@ -1,8 +1,15 @@
 <script setup>
+import { toRef } from 'vue';
+import { useField } from 'vee-validate';
+
 const props = defineProps({
   type: {
     type: String,
     default: 'text',
+  },
+  name: {
+    type: String,
+    required: true,
   },
   placeholder: {
     type: String,
@@ -12,22 +19,43 @@ const props = defineProps({
     type: String,
     default: '',
   },
-})
+});
+
+const name = toRef(props, 'name');
+
+const {
+  value: inputValue,
+  errorMessage,
+  handleBlur,
+  handleChange,
+  meta,
+} = useField(name, undefined, {
+  initialValue: props.modelValue,
+});
 </script>
 
 <template>
-  <label :class="$style.root">
+  <label
+    :class="{
+      [$style.root]: true,
+      [$style._error]: !!errorMessage,
+      [$style._success]: meta.valid,
+    }"
+  >
     <input
-      :value="props.modelValue"
+      :name="name"
+      :value="inputValue"
       :type="props.type"
       :placeholder="props.placeholder"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @input="handleChange"
+      @blur="handleBlur"
     >
   </label>
 </template>
 
 <style module>
 .root {
+  position: relative;
   display: flex;
   width: 100%;
 
@@ -51,6 +79,28 @@ const props = defineProps({
 
   & input::placeholder {
     color: var(--silver-color);
+  }
+}
+
+._error {
+  & input {
+    border-color: var(--error-color);
+  }
+
+  & input:hover,
+  & input:focus {
+    border-color: var(--error-color);
+  }
+}
+
+._success {
+  & input {
+    border-color: var(--success-color);
+  }
+
+  & input:hover,
+  & input:focus {
+    border-color: var(--success-color);
   }
 }
 </style>

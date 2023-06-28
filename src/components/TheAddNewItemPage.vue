@@ -1,6 +1,8 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { RouterLink } from 'vue-router';
+import { Form } from 'vee-validate';
+import { object, string, number } from 'yup';
 import { createOrderForProducts } from '../api/order';
 import ContentContainer from './ContentContainer.vue';
 import BaseInput from './base/BaseInput.vue';
@@ -37,21 +39,23 @@ const placeholder = reactive({
 });
 
 const form = reactive({
-  title: '',
-  description: '',
-  id: '',
-  price: '',
   category: 'men-clothing',
 });
 
+const schema = object().shape(
+  {
+    title: string().required(),
+    description: string().required(),
+    id: number().required(),
+    price: number().required(),
+  },
+);
+
 let isFormSubmitted = ref(false);
 
-async function onSubmit() {
+async function onSubmit(values) {
   let orderForm = {
-    title: form.title,
-    description: form.description,
-    id: form.id,
-    price: form.price,
+    ...values,
     category: form.category,
   };
 
@@ -66,43 +70,53 @@ async function onSubmit() {
     console.error('There was an error!', error);
   }
 };
+
+function onInvalidSubmit() {
+  const submitBtn = document.querySelector('.submit-button');
+  submitBtn.classList.add('invalid');
+  setTimeout(() => {
+    submitBtn.classList.remove('invalid');
+  }, 1000);
+}
 </script>
 
 <template>
   <div :class="$style.root">
     <ContentContainer>
       <h2 v-if="!isFormSubmitted" :class="$style.title">{{ title }}</h2>
-      <form
+      <Form
         v-if="!isFormSubmitted"
         :class="$style.wrapper"
-        @submit.prevent="onSubmit"
+        @submit="onSubmit"
+        :validation-schema="schema"
+        @invalid-submit="onInvalidSubmit"
       >
         <div :class="$style.fieldsRow">
           <BaseInput
-            v-model.trim="form.title"
             :placeholder="placeholder.title"
+            name="title"
             type="text"
             :class="$style.field"
           />
         </div>
         <div :class="$style.fieldsRow">
           <BaseInput
-            v-model.trim="form.description"
             :placeholder="placeholder.description"
+            name="description"
             type="text"
             :class="$style.field"
           />
         </div>
         <div :class="$style.fieldsRow">
           <BaseInput
-            v-model.trim="form.id"
             :placeholder="placeholder.id"
+            name="id"
             type="number"
             :class="$style.field"
           />
           <BaseInput
-            v-model.trim="form.price"
             :placeholder="placeholder.price"
+            name="price"
             type="number"
             :class="$style.field"
           />
@@ -111,9 +125,9 @@ async function onSubmit() {
           <BaseSelect v-model="form.category" :options="placeholder.selectOptions" />
         </div>
         <div :class="$style.fieldsRow">
-          <BaseButton :class="$style.button" type="submit">{{ submitButtonText }}</BaseButton>
+          <BaseButton :class="$style.button" class="submit-button" type="submit">{{ submitButtonText }}</BaseButton>
         </div>
-      </form>
+      </Form>
       <div v-else :class="$style.success">
         <p :class="$style.successText">{{ successText }}</p>
         <RouterLink

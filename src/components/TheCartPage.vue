@@ -1,6 +1,8 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import { RouterLink } from 'vue-router'
+import { RouterLink } from 'vue-router';
+import { Form } from 'vee-validate';
+import { object, string, number } from 'yup';
 import { createOrderForProducts } from '../api/order';
 import ContentContainer from './ContentContainer.vue';
 import BaseInput from './base/BaseInput.vue';
@@ -57,37 +59,32 @@ const placeholder = reactive({
 });
 
 const form = reactive({
-  city: '',
-  street: '',
-  houseNumber: '',
-  flatNumber: '',
-  postcode: '',
-  message: '',
-  surname: '',
-  name: '',
-  patronymic: '',
-  phone: '',
-  email: '',
   isSubscribed: true,
   paymentMethod: '',
   deliveryMethod: 'post',
 });
 
+const schema = object().shape(
+  {
+    city: string().required(),
+    street: string().required(),
+    house: number().required(),
+    flat: number().notRequired(),
+    postcode: number().min(6).required(),
+    message: string().default('').notRequired(),
+    surname: string().required(),
+    name: string().required(),
+    patronymic: string().required(),
+    phone: number().required(),
+    email: string().email().required(),
+  },
+);
+
 let isFormSubmitted = ref(false);
 
-async function onSubmit() {
+async function onSubmit(values) {
   let orderForm = {
-    city: form.city,
-    street: form.street,
-    houseNumber: form.houseNumber,
-    flatNumber: form.flatNumber,
-    postcode: form.postcode,
-    message: form.message,
-    surname: form.surname,
-    name: form.name,
-    patronymic: form.patronymic,
-    phone: form.phone,
-    email: form.email,
+    ...values,
     isSubscribed: form.isSubscribed,
     paymentMethod: form.paymentMethod,
     deliveryMethod: form.deliveryMethod,
@@ -104,22 +101,32 @@ async function onSubmit() {
     console.error('There was an error!', error);
   }
 };
+
+function onInvalidSubmit() {
+  const submitBtn = document.querySelector('.submit-button');
+  submitBtn.classList.add('invalid');
+  setTimeout(() => {
+    submitBtn.classList.remove('invalid');
+  }, 1000);
+}
 </script>
 
 <template>
   <div :class="$style.root">
     <ContentContainer>
-      <form
+      <Form
         v-if="!isFormSubmitted"
         :class="$style.wrapper"
-        @submit.prevent="onSubmit"
+        @submit="onSubmit"
+        :validation-schema="schema"
+        @invalid-submit="onInvalidSubmit"
       >
         <div :class="$style.column">
           <p :class="$style.title">{{ receiving }}</p>
           <div :class="$style.fieldsRow">
             <BaseInput
-              v-model.trim="form.city"
               :placeholder="placeholder.city"
+              name="city"
               type="text"
               :class="$style.fieldCity"
             />
@@ -129,34 +136,34 @@ async function onSubmit() {
           </div>
           <div :class="$style.fieldsRow">
             <BaseInput
-              v-model.trim="form.street"
               :placeholder="placeholder.street"
+              name="street"
               type="text"
               :class="$style.fieldStreet"
             />
             <BaseInput
-              v-model.trim="form.houseNumber"
               :placeholder="placeholder.houseNumber"
-              type="text"
+              name="house"
+              type="number"
               :class="$style.fieldHouse"
             />
             <BaseInput
-              v-model.trim="form.flatNumber"
               :placeholder="placeholder.flatNumber"
+              name="flat"
               type="number"
               :class="$style.fieldFlat"
             />
             <BaseInput
-              v-model.trim="form.postcode"
               :placeholder="placeholder.postcode"
+              name="postcode"
               type="number"
               :class="$style.fieldPostcode"
             />
           </div>
           <div :class="$style.fieldsRow">
             <BaseInput
-              v-model.trim="form.message"
               :placeholder="placeholder.message"
+              name="message"
               type="text"
               :class="$style.fieldMessage"
             />
@@ -164,36 +171,36 @@ async function onSubmit() {
           <p :class="$style.title">{{ userInfo }}</p>
           <div :class="$style.fieldsRow">
             <BaseInput
-              v-model.trim="form.surname"
               :placeholder="placeholder.surname"
+              name="surname"
               type="text"
               :class="$style.fieldSurname"
             />
             <BaseInput
-              v-model.trim="form.name"
               :placeholder="placeholder.name"
+              name="name"
               type="text"
               :class="$style.fieldName"
             />
             <BaseInput
-              v-model.trim="form.patronymic"
               :placeholder="placeholder.patronymic"
+              name="patronymic"
               type="text"
               :class="$style.fieldPatronymic"
             />
           </div>
           <div :class="$style.fieldsRow">
             <BaseInput
-              v-model.trim="form.phone"
               :placeholder="placeholder.phone"
+              name="phone"
               type="tel"
               :class="$style.fieldPhone"
             />
           </div>
           <div :class="$style.fieldsRow">
             <BaseInput
-              v-model.trim="form.email"
               :placeholder="placeholder.email"
+              name="email"
               type="email"
               :class="$style.fieldEmail"
             />
@@ -209,10 +216,10 @@ async function onSubmit() {
         <div :class="$style.column">
           <div :class="$style.orderDetails">
             <p :class="$style.title">{{ orderDetails }}</p>
-            <BaseButton type="submit">{{ submitButtonText }}</BaseButton>
+            <BaseButton class="submit-button" type="submit">{{ submitButtonText }}</BaseButton>
           </div>
         </div>
-      </form>
+      </Form>
       <div v-else :class="$style.success">
         <p :class="$style.thanksText">{{ thanksText }}</p>
         <p :class="$style.description">{{ description }}</p>

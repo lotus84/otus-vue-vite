@@ -12,6 +12,8 @@
   --charcoal-color: #444444;
   --orinoco-color: #d7d7b9;
   --gainsboro-color: #e3e2e2;
+  --error-color: #f23648;
+  --success-color: #21a67a;
 
   /* Typography */
   --font-family: 'Montserrat', Arial, Helvetica, sans-serif;
