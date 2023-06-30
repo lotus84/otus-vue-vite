@@ -28,6 +28,8 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   color: var(--black-color);
   background-color: var(--snow-color);
@@ -37,4 +39,31 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  & #app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  & main {
+    flex-grow: 1;
+  }
+}
+
+.submit-button.invalid {
+  position: relative;
+  animation: shake 300ms;
+}
+
+@keyframes shake {
+  25% {
+      transform: translateX(4px);
+  }
+  50% {
+      transform: translateX(-4px);
+  }
+  75% {
+      transform: translateX(4px);
+  }
 }
