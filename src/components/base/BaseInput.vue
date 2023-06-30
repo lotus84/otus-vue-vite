@@ -50,6 +50,9 @@ const {
       @input="handleChange"
       @blur="handleBlur"
     >
+    <span :class="$style.errorMessage" v-show="errorMessage">
+      {{ errorMessage }}
+    </span>
   </label>
 </template>
 
@@ -102,5 +105,14 @@ const {
   & input:focus {
     border-color: var(--success-color);
   }
+}
+
+.errorMessage {
+  position: absolute;
+  top: 100%;
+  left: 8px;
+  font-size: 12px;
+  line-height: 14px;
+  color: var(--error-color);
 }
 </style>

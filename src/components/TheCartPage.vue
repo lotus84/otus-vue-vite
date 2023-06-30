@@ -66,17 +66,17 @@ const form = reactive({
 
 const schema = object().shape(
   {
-    city: string().required(),
-    street: string().required(),
-    house: number().required(),
-    flat: number().notRequired(),
-    postcode: number().min(6).required(),
+    city: string().required('нужно заполнить'),
+    street: string().required('нужно заполнить'),
+    house: number().positive().required().typeError('нужно заполнить'),
+    flat: number().positive().required().typeError('нужно заполнить'),
+    postcode: number().min(6).required().positive().typeError('укажите индекс'),
     message: string().default('').notRequired(),
-    surname: string().required(),
-    name: string().required(),
-    patronymic: string().required(),
-    phone: number().required(),
-    email: string().email().required(),
+    surname: string().required('укажите свою фамилию'),
+    name: string().required('укажите своё имя'),
+    patronymic: string().required('укажите своё отчество'),
+    phone: number().required().positive().typeError('укажите свой телефон'),
+    email: string().email().required('укажите свой email'),
   },
 );
 
