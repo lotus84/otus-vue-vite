@@ -1,7 +1,10 @@
 <script setup>
-import { ref } from 'vue';
-import { RouterLink } from 'vue-router'
+import { onMounted, ref, watch } from 'vue';
+import { useRoute, RouterLink } from 'vue-router'
+import { logoutUser } from '../utils/index';
 import ContentContainer from './ContentContainer.vue';
+import BaseButton from './base/BaseButton.vue';
+import IconUserVue from './icons/IconUser.vue';
 
 const links = ref([
   {
@@ -19,6 +22,35 @@ const links = ref([
 ]);
 
 const login = ref('Войти');
+const logout = ref('Выйти');
+const isUserAuthed = ref(false);
+
+onMounted(() => {
+  if (localStorage.getItem('isAuthenticated')) {
+    isUserAuthed.value = true;
+  } else {
+    isUserAuthed.value = false;
+  }
+})
+
+const route = useRoute();
+
+watch(() => route.name, () => {
+  if (localStorage.getItem('isAuthenticated')) {
+    isUserAuthed.value = true;
+  } else {
+    isUserAuthed.value = false;
+  }
+})
+
+function onLogoutButtonClick() {
+  logoutUser();
+  if (localStorage.getItem('isAuthenticated')) {
+    isUserAuthed.value = true;
+  } else {
+    isUserAuthed.value = false;
+  }
+};
 </script>
 
 <template>
@@ -37,7 +69,17 @@ const login = ref('Войти');
           </RouterLink>
         </nav>
         <div :class="$style.authWrapper">
-          <button :class="$style.link" type="button">{{ login }}</button>
+          <RouterLink
+            v-if="!isUserAuthed"
+            :class="$style.link"
+            :to="{ name: 'login' }"
+          >
+            {{ login }}
+          </RouterLink>
+          <BaseButton v-else :class="$style.button" type="button" @click="onLogoutButtonClick()">
+            <IconUserVue />
+            {{ logout }}
+          </BaseButton>
         </div>
       </div>
     </ContentContainer>
@@ -49,7 +91,7 @@ const login = ref('Войти');
   display: flex;
   justify-content: flex-start;
   width: 100%;
-  min-height: 45px;
+  min-height: 72px;
   background-image: linear-gradient(100deg, var(--copper-rose-color) -30%, var(--eunry-color) 97%);
 }
 
@@ -85,6 +127,12 @@ const login = ref('Войти');
 
   &:hover {
     color: var(--kabul-color);
+  }
+}
+
+.button {
+  & svg {
+    margin-right: 16px;
   }
 }
 </style>
