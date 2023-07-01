@@ -7,25 +7,22 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },
     {
       path: '/cart',
       name: 'cart',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/CartView.vue')
+      component: () => import('../views/CartView.vue'),
     },
     {
       path: '/add-item',
       name: 'add-item',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AddNewItemView.vue')
+      component: () => import('../views/AddNewItemView.vue'),
     },
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    return { top: 0 };
+  },
 })
 
 export default router

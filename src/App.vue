@@ -6,6 +6,8 @@ import TheFooter from './components/TheFooter.vue';
 
 <template>
   <TheHeader />
-  <RouterView />
+  <main>
+    <RouterView />
+  </main>
   <TheFooter />
 </template>

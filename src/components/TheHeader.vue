@@ -6,40 +6,40 @@ import ContentContainer from './ContentContainer.vue';
 const links = ref([
   {
     text: 'Каталог',
-    href: '/',
+    href: 'home',
   },
   {
     text: 'Корзина',
-    href: '/cart',
+    href: 'cart',
   },
   {
     text: 'Добавить товар',
-    href: '/add-item',
-  },
-  {
-    text: 'Оплата и доставка',
-    href: '/',
-  },
-  {
-    text: 'О компании',
-    href: '/',
+    href: 'add-item',
   },
 ]);
+
+const login = ref('Войти');
 </script>
 
 <template>
   <header :class="$style.root">
     <ContentContainer>
-      <nav :class="$style.wrapper">
-        <RouterLink
-          v-for="link, index in links"
-          :key="index"
-          :class="$style.link"
-          :to="link.href"
-        >
-          {{ link.text }}
-        </RouterLink>
-      </nav>
+      <div :class="$style.wrapper">
+        <nav :class="$style.nav">
+          <RouterLink
+            v-for="link, index in links"
+            :key="index"
+            :class="$style.link"
+            active-class="header-link-active"
+            :to="{ name: link.href }"
+          >
+            {{ link.text }}
+          </RouterLink>
+        </nav>
+        <div :class="$style.authWrapper">
+          <button :class="$style.link" type="button">{{ login }}</button>
+        </div>
+      </div>
     </ContentContainer>
   </header>
 </template>
@@ -56,12 +56,24 @@ const links = ref([
 .wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 24px;
+  justify-content: space-between;
   width: 100%;
   min-height: 100%;
+  gap: 24px;
 }
 
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.authWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
 .link {
   display: inline-flex;
   align-items: center;
