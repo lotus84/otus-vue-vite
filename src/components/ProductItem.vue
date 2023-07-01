@@ -6,24 +6,30 @@ import IconCart from './icons/IconCart.vue';
 
 const buttonText = ref('В корзину');
 
-defineProps({
+const props = defineProps({
   product: {
     type: Object,
     required: true,
   },
 })
+
+const emit = defineEmits(['add-to-cart']);
+
+function addToCart() {
+  emit('add-to-cart', props.product, 1);
+}
 </script>
 
 <template>
   <div :class="$style.root">
-    <RouterLink :class="$style.link" :to="{ name: 'item', params: { id: product.id }}">
+    <RouterLink :class="$style.link" :to="{ name: 'item', params: { id: props.product.id }}">
       <div :class="$style.imageBox">
-        <img :src="product.image" alt="">
+        <img :src="props.product.image" alt="">
       </div>
-      <h3 :class="$style.title">{{ product.title }}</h3>
-      <span :class="$style.price">{{ product.price }}$</span>
+      <h3 :class="$style.title">{{ props.product.title }}</h3>
+      <span :class="$style.price">{{ props.product.price }}$</span>
     </RouterLink>
-    <BaseButton :class="$style.addToCart">
+    <BaseButton :class="$style.addToCart" @click="addToCart()">
       <IconCart />
       {{ buttonText }}
     </BaseButton>

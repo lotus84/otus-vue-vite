@@ -4,12 +4,14 @@ import { RouterLink } from 'vue-router';
 import { Form } from 'vee-validate';
 import { object, string, number } from 'yup';
 import { createOrderForProducts } from '../api/order';
+import { cartProducts } from '../utils/cart';
 import ContentContainer from './ContentContainer.vue';
 import BaseInput from './base/BaseInput.vue';
 import BaseButton from './base/BaseButton.vue';
 import BaseCheckbox from './base/BaseCheckbox.vue';
 import BaseRadioButtonsGroup from './base/BaseRadioButtonsGroup.vue';
 import BaseSelect from './base/BaseSelect.vue';
+import CartItem from './CartItem.vue';
 
 const receiving = ref('Способ получения');
 const userInfo = ref('Данные получателя');
@@ -19,6 +21,7 @@ const orderDetails = ref('Подробности заказа');
 const mainPage = ref('на главную страницу');
 const thanksText = ref('Благодарим за покупку!');
 const description = ref('В ближайшее время с вами свяжется менеджер для подтверждения заказа');
+const orderComposition = ref('Состав заказа');
 const placeholder = reactive({
   city: 'Город',
   street: 'Улица',
@@ -108,6 +111,11 @@ function onInvalidSubmit() {
   setTimeout(() => {
     submitBtn.classList.remove('invalid');
   }, 1000);
+}
+
+function handleDeleteFromCart(productId) {
+  const indexDeletedItem = cartProducts.findIndex((cartItem) => cartItem.item.id === productId);
+  cartProducts.splice(indexDeletedItem, 1)
 }
 </script>
 
@@ -213,7 +221,13 @@ function onInvalidSubmit() {
             <BaseRadioButtonsGroup v-model="form.paymentMethod" :items="placeholder.radioItems"/>
           </div>
         </div>
-        <div :class="$style.column">
+        <div :class="[$style.column, $style.column_right]">
+          <p v-if="cartProducts.length > 0" :class="$style.title">{{ orderComposition }}</p>
+          <ul :class="$style.productList">
+            <li v-for="item, index in cartProducts" :key="index" :class="$style.productItem">
+              <CartItem :item="item.item" :count="item.count" @delete-product="handleDeleteFromCart" />
+            </li>
+          </ul>
           <div :class="$style.orderDetails">
             <p :class="$style.title">{{ orderDetails }}</p>
             <BaseButton class="submit-button" type="submit">{{ submitButtonText }}</BaseButton>
@@ -254,6 +268,10 @@ function onInvalidSubmit() {
   flex-direction: column;
   gap: 24px;
   width: calc((100% - 100px) / 2);
+}
+
+.column_right {
+  gap: 48px;
 }
 
 .title {
@@ -327,5 +345,30 @@ function onInvalidSubmit() {
   text-transform: uppercase;
   border-radius: 50px;
   background-image: linear-gradient(152deg, var(--copper-rose-color) 0%, var(--eunry-color) 100%);
+}
+
+.productList {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  width: 100%;
+}
+
+.productItem {
+  position: relative;
+  display: flex;
+  width: 100%;
+
+  &::before {
+    position: absolute;
+    top: -24px;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    height: 1px;
+    content: '';
+    background-color: var(--silver-color);
+  }
 }
 </style>
