@@ -32,6 +32,12 @@ const router = createRouter({
       component: () => import('../views/CartView.vue'),
     },
     {
+      path: '/item/:id',
+      name: 'item',
+      component: () => import('../views/TheProductView.vue'),
+      props: true,
+    },
+    {
       path: '/add-item',
       name: 'add-item',
       component: () => import('../views/AddNewItemView.vue'),
@@ -40,7 +46,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/TheLoggin.vue'),
+      component: () => import('../views/TheLogginView.vue'),
       beforeEnter: ifNotAuthenticated,
     },
   ],

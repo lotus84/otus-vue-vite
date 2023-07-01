@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import BaseButton from './base/BaseButton.vue';
+import IconCart from './icons/IconCart.vue';
 
 const buttonText = ref('В корзину');
 
@@ -14,14 +16,17 @@ defineProps({
 
 <template>
   <div :class="$style.root">
-    <a :class="$style.link" href="#">
+    <RouterLink :class="$style.link" :to="{ name: 'item', params: { id: product.id }}">
       <div :class="$style.imageBox">
-      <img :src="product.image" alt="">
+        <img :src="product.image" alt="">
       </div>
       <h3 :class="$style.title">{{ product.title }}</h3>
       <span :class="$style.price">{{ product.price }}$</span>
-    </a>
-    <BaseButton>{{ buttonText }}</BaseButton>
+    </RouterLink>
+    <BaseButton :class="$style.addToCart">
+      <IconCart />
+      {{ buttonText }}
+    </BaseButton>
   </div>
 </template>
 
@@ -76,5 +81,11 @@ defineProps({
   font-size: 16px;
   font-weight: 600;
   line-height: 105%;
+}
+
+.addToCart {
+  & svg {
+    margin-right: 12px;
+  }
 }
 </style>

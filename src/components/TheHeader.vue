@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
-import { useRoute, RouterLink } from 'vue-router'
+import { useRoute, RouterLink } from 'vue-router';
 import { logoutUser } from '../utils/index';
 import ContentContainer from './ContentContainer.vue';
 import BaseButton from './base/BaseButton.vue';
