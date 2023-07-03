@@ -10,14 +10,17 @@ const links = ref([
   {
     text: 'Каталог',
     href: 'home',
+    isVisibleAuthed: false,
   },
   {
     text: 'Корзина',
     href: 'cart',
+    isVisibleAuthed: false,
   },
   {
     text: 'Добавить товар',
     href: 'add-item',
+    isVisibleAuthed: true,
   },
 ]);
 
@@ -43,6 +46,13 @@ watch(() => route.name, () => {
   }
 })
 
+function isNavLinkVisible(link) {
+  if (link.isVisibleAuthed) {
+    return isUserAuthed.value;
+  }
+  return true;
+}
+
 function onLogoutButtonClick() {
   logoutUser();
   if (localStorage.getItem('isAuthenticated')) {
@@ -58,15 +68,16 @@ function onLogoutButtonClick() {
     <ContentContainer>
       <div :class="$style.wrapper">
         <nav :class="$style.nav">
-          <RouterLink
-            v-for="link, index in links"
-            :key="index"
-            :class="$style.link"
-            active-class="header-link-active"
-            :to="{ name: link.href }"
-          >
-            {{ link.text }}
-          </RouterLink>
+          <template v-for="link, index in links" :key="index">
+            <RouterLink
+              v-if="isNavLinkVisible(link)"
+              :class="$style.link"
+              active-class="header-link-active"
+              :to="{ name: link.href }"
+            >
+              {{ link.text }}
+            </RouterLink>
+          </template>
         </nav>
         <div :class="$style.authWrapper">
           <RouterLink
