@@ -3,20 +3,19 @@ import { ref, reactive } from 'vue';
 import { Form } from 'vee-validate';
 import { object, string, number } from 'yup';
 import { createOrderForProducts } from '../api/order';
-import { cartProducts } from '../utils/cart';
 import BaseInput from './base/BaseInput.vue';
 import BaseButton from './base/BaseButton.vue';
 import BaseCheckbox from './base/BaseCheckbox.vue';
 import BaseRadioButtonsGroup from './base/BaseRadioButtonsGroup.vue';
 import BaseSelect from './base/BaseSelect.vue';
-import CartItem from './CartItem.vue';
+import CartItemsList from './CartItemsList.vue';
 
 const receiving = ref('Способ получения');
 const userInfo = ref('Данные получателя');
 const paymentMethod = ref('Способ оплаты');
 const submitButtonText = ref('Оформить заказ');
 const orderDetails = ref('Подробности заказа');
-const orderComposition = ref('Состав заказа');
+
 const placeholder = {
   city: 'Город',
   street: 'Улица',
@@ -106,11 +105,6 @@ function onInvalidSubmit() {
   setTimeout(() => {
     submitBtn.classList.remove('invalid');
   }, 1000);
-}
-
-function handleDeleteFromCart(productId) {
-  const indexDeletedItem = cartProducts.findIndex((cartItem) => cartItem.item.id === productId);
-  cartProducts.splice(indexDeletedItem, 1)
 }
 </script>
 
@@ -214,12 +208,7 @@ function handleDeleteFromCart(productId) {
       </div>
     </div>
     <div :class="[$style.column, $style.column_right]">
-      <p v-if="cartProducts.length > 0" :class="$style.title">{{ orderComposition }}</p>
-      <ul :class="$style.productList">
-        <li v-for="item, index in cartProducts" :key="index" :class="$style.productItem">
-          <CartItem :item="item.item" :count="item.count" @delete-product="handleDeleteFromCart" />
-        </li>
-      </ul>
+      <CartItemsList />
       <div :class="$style.orderDetails">
         <p :class="$style.title">{{ orderDetails }}</p>
         <BaseButton class="submit-button" type="submit">{{ submitButtonText }}</BaseButton>
@@ -279,30 +268,5 @@ function handleDeleteFromCart(productId) {
   padding: 40px;
   border-radius: 20px;
   background-color: var(--gainsboro-color);
-}
-
-.productList {
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-  width: 100%;
-}
-
-.productItem {
-  position: relative;
-  display: flex;
-  width: 100%;
-
-  &::before {
-    position: absolute;
-    top: -24px;
-    left: 0;
-    z-index: 1;
-    display: flex;
-    width: 100%;
-    height: 1px;
-    content: '';
-    background-color: var(--silver-color);
-  }
 }
 </style>

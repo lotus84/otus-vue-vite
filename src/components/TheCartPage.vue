@@ -14,8 +14,7 @@ let isFormSubmitted = ref(false);
 <template>
   <div :class="$style.root">
     <ContentContainer>
-      <CartForm v-if="!isFormSubmitted" @success="isFormSubmitted = true">
-      </CartForm>
+      <CartForm v-if="!isFormSubmitted" @success="isFormSubmitted = true" />
       <div v-else :class="$style.success">
         <p :class="$style.thanksText">{{ thanksText }}</p>
         <p :class="$style.description">{{ description }}</p>
