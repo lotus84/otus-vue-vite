@@ -22,7 +22,7 @@ const mainPage = ref('на главную страницу');
 const thanksText = ref('Благодарим за покупку!');
 const description = ref('В ближайшее время с вами свяжется менеджер для подтверждения заказа');
 const orderComposition = ref('Состав заказа');
-const placeholder = reactive({
+const placeholder = {
   city: 'Город',
   street: 'Улица',
   houseNumber: 'Дом',
@@ -59,7 +59,7 @@ const placeholder = reactive({
       value: 'courier',
     },
   ]
-});
+};
 
 const form = reactive({
   isSubscribed: true,

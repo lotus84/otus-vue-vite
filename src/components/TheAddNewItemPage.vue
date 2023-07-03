@@ -13,7 +13,7 @@ const title = ref('Добавить товар');
 const mainPage = ref('на главную страницу');
 const successText = ref('Товар успешно добавлен!');
 const submitButtonText = ref('Добавить');
-const placeholder = reactive({
+const placeholder = {
   title: 'Название товара',
   description: 'Описание',
   id: 'Артикул',
@@ -36,7 +36,7 @@ const placeholder = reactive({
       value: 'women-clothing',
     },
   ],
-});
+};
 
 const form = reactive({
   category: 'men-clothing',

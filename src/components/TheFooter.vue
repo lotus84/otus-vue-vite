@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { RouterLink } from 'vue-router'
+import { onMounted, ref, watch } from 'vue';
+import { useRoute, RouterLink } from 'vue-router';
 import ContentContainer from './ContentContainer.vue';
 
 const contacts = ref([
@@ -9,21 +9,53 @@ const contacts = ref([
   'Ежедневно с 10:00 до 19:00',
   '@hobbyart_dv',
 ]);
+
 const links = ref([
-  {
+{
     text: 'Каталог',
     href: 'home',
+    isVisibleAuthed: false,
   },
   {
     text: 'Корзина',
     href: 'cart',
+    isVisibleAuthed: false,
   },
   {
     text: 'Добавить товар',
     href: 'add-item',
+    isVisibleAuthed: true,
   },
 ]);
+
 const copyright = ref('© 2012-2021 SHOP АРТ — официальный интернет-магазин товаров. Все права защищены. Условия использования и политика конфиденциальности');
+
+const isUserAuthed = ref(false);
+
+onMounted(() => {
+  if (localStorage.getItem('isAuthenticated')) {
+    isUserAuthed.value = true;
+  } else {
+    isUserAuthed.value = false;
+  }
+})
+
+const route = useRoute();
+
+watch(() => route.name, () => {
+  if (localStorage.getItem('isAuthenticated')) {
+    isUserAuthed.value = true;
+  } else {
+    isUserAuthed.value = false;
+  }
+})
+
+function isNavLinkVisible(link) {
+  if (link.isVisibleAuthed) {
+    return isUserAuthed.value;
+  }
+  return true;
+}
 </script>
 
 <template>
@@ -46,6 +78,7 @@ const copyright = ref('© 2012-2021 SHOP АРТ — официальный ин�
             :class="$style.navItem"
           >
             <RouterLink
+              v-if="isNavLinkVisible(link)"
               :to="{ name: link.href }"
               :class="$style.link"
               active-class="footer-link-active"
