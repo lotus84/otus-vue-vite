@@ -14,8 +14,6 @@ export async function createOrderForProducts( orderObject ) {
   };
 
   const response = await fetch(url, requestOptions);
-  // const data = await response.json();
-  // this.postId = data.id;
 
   return response;
 }
