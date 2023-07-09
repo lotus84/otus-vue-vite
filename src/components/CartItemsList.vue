@@ -1,24 +1,24 @@
 <script setup>
-import { ref } from 'vue';
-import { cartProducts } from '../utils/cart';
+import { useCartStore } from '../stores/cart';
+import { storeToRefs } from 'pinia';
 import CartItem from './CartItem.vue';
 
-const orderComposition = ref('Состав заказа');
+const orderComposition = 'Состав заказа';
 
-function handleDeleteFromCart(productId) {
-  const indexDeletedItem = cartProducts.findIndex((cartItem) => cartItem.item.id === productId);
-  cartProducts.splice(indexDeletedItem, 1)
-}
+const cartStore = useCartStore();
+
+const { cartItems } = storeToRefs(cartStore);
 </script>
 
 <template>
-  <div v-if="cartProducts.length > 0" :class="$style.root">
+  <div v-if="cartItems.length > 0" :class="$style.root">
     <p :class="$style.title">{{ orderComposition }}</p>
     <ul :class="$style.productList">
-      <li v-for="item, index in cartProducts" :key="index" :class="$style.productItem">
-        <CartItem :item="item.item" :count="item.count" @delete-product="handleDeleteFromCart" />
+      <li v-for="item, index in cartItems" :key="index" :class="$style.productItem">
+        <CartItem :item="item" />
       </li>
     </ul>
+
   </div>
 </template>
 

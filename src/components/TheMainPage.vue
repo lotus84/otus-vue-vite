@@ -5,6 +5,7 @@ import InfoToolbar from './InfoToolbar.vue';
 import MainIntro from './main-intro/MainIntro.vue';
 import ProductList from './ProductList.vue';
 import BaseSearchInput from './base/BaseSearchInput.vue';
+import FloatCartButton from './FloatCartButton.vue';
 
 const placeholder = ref('Поиск товара');
 const searchText = ref('');
@@ -32,6 +33,7 @@ function filteredProducts() {
     <MainIntro />
     <ProductList v-if="!catalogStore.isLoading" :products="filteredProducts()" />
     <p v-else>Loading ...</p>
+    <FloatCartButton />
   </div>
 </template>
 

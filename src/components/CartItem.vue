@@ -1,4 +1,7 @@
 <script setup>
+import { computed, reactive } from 'vue';
+import { useCatalogStore } from '../stores/catalog';
+import { useCartStore } from '../stores/cart';
 import BaseButton from './base/BaseButton.vue';
 import IconDelete from './icons/IconDelete.vue';
 
@@ -7,27 +10,48 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  count: {
-    type: [String, Number],
-  },
-})
+});
 
-const emit = defineEmits(['delete-product']);
+const catalogStore = useCatalogStore();
 
-function onDeleteButtonClick() {
-  emit('delete-product', props.item.id)
+let itemInCatalog = reactive({});
+
+itemInCatalog = catalogStore.findProductById(Number(props.item.id));
+
+const cartStore = useCartStore();
+
+const sum = computed(() => {
+  return (Number(itemInCatalog.price) * Number(props.item.count)).toFixed(2)
+});
+
+function addToCart() {
+  cartStore.addItemToCart(Number(props.item.id), 1)
+};
+
+function removeFromCart() {
+  cartStore.removeItemFromCart(Number(props.item.id), 1)
+};
+
+function deleteItemFromCart() {
+  cartStore.deleteItemFromCartById(Number(props.item.id));
 };
 </script>
 
 <template>
   <div :class="$style.root">
     <div :class="$style.imgBox">
-      <img :src="props?.item.image" alt="">
+      <img :src="itemInCatalog.image" alt="">
     </div>
-    <h3 :class="$style.title">{{ props?.item.title }}</h3>
-    <div :class="$style.count">{{ props.count }}</div>
-    <span :class="$style.price">{{ props?.item.price }}$</span>
-    <BaseButton @click="onDeleteButtonClick">
+    <h3 :class="$style.title">{{ itemInCatalog.title }}</h3>
+    <BaseButton :class="$style.button" @click="removeFromCart()">
+      -
+    </BaseButton>
+    <div :class="$style.count">{{ props.item.count }}</div>
+    <BaseButton :class="$style.button" @click="addToCart()">
+      +
+    </BaseButton>
+    <span :class="$style.price">{{ sum }}$</span>
+    <BaseButton @click="deleteItemFromCart()">
       <IconDelete />
     </BaseButton>
   </div>
@@ -39,7 +63,7 @@ function onDeleteButtonClick() {
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  gap: 24px;
+  gap: 12px;
 }
 
 .imgBox {
@@ -47,9 +71,9 @@ function onDeleteButtonClick() {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30%;
-  padding-bottom: 20%;
-  max-width: 175px;
+  width: 20%;
+  padding-bottom: 15%;
+  max-width: 155px;
 
   & img {
     position: absolute;
@@ -63,7 +87,7 @@ function onDeleteButtonClick() {
 }
 
 .title {
-  width: 30%;
+  width: 25%;
   font-size: 16px;
   font-weight: 600;
   line-height: 18px;
@@ -75,10 +99,16 @@ function onDeleteButtonClick() {
 }
 
 .price {
-  width: 100px;
+  flex-shrink: 0;
+  width: 130px;
   font-size: 20px;
   font-weight: 600;
   line-height: 22px;
   text-align: center;
+}
+
+.button {
+  flex-shrink: 0;
+  width: 46px;
 }
 </style>

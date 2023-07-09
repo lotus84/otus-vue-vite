@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { getAllProducts } from '../api/products';
 
 export const useCatalogStore = defineStore('catalog', () => {
-  let products = reactive([]);
+  const products = reactive([]);
 
   const isLoading = ref(false);
 
@@ -14,5 +14,14 @@ export const useCatalogStore = defineStore('catalog', () => {
     isLoading.value = false;
   }
 
-  return { products, isLoading, getProducts, }
+  function findProductById(id) {
+    return products.find((product) => Number(product.id) === Number(id));
+  }
+
+  return {
+    products,
+    isLoading,
+    getProducts,
+    findProductById,
+  };
 })

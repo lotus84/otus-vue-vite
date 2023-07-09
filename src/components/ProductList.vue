@@ -2,33 +2,13 @@
 import { ref } from 'vue';
 import ContentContainer from './ContentContainer.vue';
 import ProductItem from './ProductItem.vue';
-import { cartProducts } from '../utils/cart';
 
 defineProps({
   products: {
     type: Array,
     required: true,
-  }
-})
-
-function handleAddToCart(item, quantity) {
-  const itemObject = {
-    item: item,
-    count: quantity,
-  };
-
-  let productInCart = undefined;
-
-  if (cartProducts.length > 0) {
-    productInCart = cartProducts.find((cartItem) => cartItem.item.id === itemObject.item.id);
-  }
-
-  if (productInCart) {
-    productInCart.count ++;
-  } else {
-    cartProducts.push(itemObject);
-  }
-}
+  },
+});
 
 const title = ref('Каталог товаров');
 const emptyCatalog = ref('Простите, по вашему запросу товаров сейчас нет.');
@@ -44,7 +24,7 @@ const emptyCatalog = ref('Простите, по вашему запросу т�
           :key="product.id"
           :class="$style.item"
         >
-          <ProductItem :product="product" @add-to-cart="handleAddToCart" />
+          <ProductItem :product="product" />
         </li>
       </ul>
       <p v-if="products.length === 0" :class="$style.emptyCatalog">{{ emptyCatalog }}</p>
