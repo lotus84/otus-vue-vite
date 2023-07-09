@@ -1,10 +1,12 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
-import { useRoute, RouterLink } from 'vue-router';
-import { logoutUser } from '../utils/index';
+import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
 import ContentContainer from './ContentContainer.vue';
 import BaseButton from './base/BaseButton.vue';
 import IconUserVue from './icons/IconUser.vue';
+
+const authStore = useAuthStore();
 
 const links = ref([
   {
@@ -24,42 +26,18 @@ const links = ref([
   },
 ]);
 
-const login = ref('Войти');
-const logout = ref('Выйти');
-const isUserAuthed = ref(false);
-
-onMounted(() => {
-  if (localStorage.getItem('isAuthenticated')) {
-    isUserAuthed.value = true;
-  } else {
-    isUserAuthed.value = false;
-  }
-})
-
-const route = useRoute();
-
-watch(() => route.name, () => {
-  if (localStorage.getItem('isAuthenticated')) {
-    isUserAuthed.value = true;
-  } else {
-    isUserAuthed.value = false;
-  }
-})
+const login = 'Войти';
+const logout = 'Выйти';
 
 function isNavLinkVisible(link) {
   if (link.isVisibleAuthed) {
-    return isUserAuthed.value;
+    return authStore.isUserAuth;
   }
   return true;
 }
 
 function onLogoutButtonClick() {
-  logoutUser();
-  if (localStorage.getItem('isAuthenticated')) {
-    isUserAuthed.value = true;
-  } else {
-    isUserAuthed.value = false;
-  }
+  authStore.logoutUser();
 };
 </script>
 
@@ -81,7 +59,7 @@ function onLogoutButtonClick() {
         </nav>
         <div :class="$style.authWrapper">
           <RouterLink
-            v-if="!isUserAuthed"
+            v-if="!authStore.isUserAuth"
             :class="$style.link"
             :to="{ name: 'login' }"
           >
@@ -89,6 +67,7 @@ function onLogoutButtonClick() {
           </RouterLink>
           <BaseButton v-else :class="$style.button" type="button" @click="onLogoutButtonClick()">
             <IconUserVue />
+            <span :class="$style.userName">{{ authStore.userName }}</span>
             {{ logout }}
           </BaseButton>
         </div>
@@ -142,8 +121,11 @@ function onLogoutButtonClick() {
 }
 
 .button {
-  & svg {
-    margin-right: 16px;
-  }
+  gap: 16px;
+}
+
+.userName {
+  color: var(--siam-color);
+  font-weight: 600;
 }
 </style>

@@ -2,10 +2,12 @@
 import { ref, reactive } from 'vue';
 import { Form } from 'vee-validate';
 import { object, string } from 'yup';
-import { setAuthToken, clearAuthToken } from '../utils/index';
+import { useAuthStore } from '../stores/auth';
 import BaseModal from './base/BaseModal.vue';
 import BaseInput from './base/BaseInput.vue';
 import BaseButton from './base/BaseButton.vue';
+
+const authStore = useAuthStore();
 
 const emit = defineEmits(['close']);
 
@@ -27,18 +29,16 @@ async function onSubmit(values) {
   let orderForm = {
     ...values,
   };
-  setAuthToken();
+  authStore.setAuthToken(values.username);
   localStorage.setItem('username', orderForm.username)
 
   emit('close');
-
-  // this.$router.push('/')
 };
 
 function onInvalidSubmit() {
   const submitBtn = document.querySelector('.submit-button');
 
-  clearAuthToken();
+  authStore.clearAuthToken();
 
   submitBtn.classList.add('invalid');
   setTimeout(() => {
