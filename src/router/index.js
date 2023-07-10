@@ -1,5 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { isLoggedIn } from '../utils/index'
 import HomeView from '../views/HomeView.vue'
+
+const ifNotAuthenticated = (to, from, next) => {
+  if (!isLoggedIn()) {
+    next()
+    return
+  }
+  next('/')
+}
+
+const ifAuthenticated = (to, from, next) => {
+  if (isLoggedIn()) {
+    next()
+    return
+  }
+  next('/login')
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,25 +24,35 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },
     {
       path: '/cart',
       name: 'cart',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/CartView.vue')
+      component: () => import('../views/CartView.vue'),
+    },
+    {
+      path: '/item/:id',
+      name: 'item',
+      component: () => import('../views/TheProductView.vue'),
+      props: true,
     },
     {
       path: '/add-item',
       name: 'add-item',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AddNewItemView.vue')
+      component: () => import('../views/AddNewItemView.vue'),
+      beforeEnter: ifAuthenticated,
     },
-  ]
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/TheLogginView.vue'),
+      beforeEnter: ifNotAuthenticated,
+    },
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    return { top: 0 };
+  },
 })
 
 export default router

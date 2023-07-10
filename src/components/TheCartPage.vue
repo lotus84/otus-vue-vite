@@ -1,225 +1,20 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { Form } from 'vee-validate';
-import { object, string, number } from 'yup';
-import { createOrderForProducts } from '../api/order';
 import ContentContainer from './ContentContainer.vue';
-import BaseInput from './base/BaseInput.vue';
-import BaseButton from './base/BaseButton.vue';
-import BaseCheckbox from './base/BaseCheckbox.vue';
-import BaseRadioButtonsGroup from './base/BaseRadioButtonsGroup.vue';
-import BaseSelect from './base/BaseSelect.vue';
+import CartForm from './CartForm.vue';
 
-const receiving = ref('Способ получения');
-const userInfo = ref('Данные получателя');
-const paymentMethod = ref('Способ оплаты');
-const submitButtonText = ref('Оформить заказ');
-const orderDetails = ref('Подробности заказа');
 const mainPage = ref('на главную страницу');
 const thanksText = ref('Благодарим за покупку!');
 const description = ref('В ближайшее время с вами свяжется менеджер для подтверждения заказа');
-const placeholder = reactive({
-  city: 'Город',
-  street: 'Улица',
-  houseNumber: 'Дом',
-  flatNumber: 'Квартира',
-  postcode: 'Индекс',
-  message: 'Добавить комментарий',
-  surname: 'Фамилия',
-  name: 'Имя',
-  patronymic: 'Отчество',
-  phone: 'Номер телефона',
-  email: 'E-mail',
-  checkboxLabel: 'Подписаться на рассылку новинок и акций',
-  radioItems: [
-    {
-      label: 'Оплата при получении наличными или картой',
-      value: 'cash'
-    },
-    {
-      label: 'Оплата банковской картой онлайн',
-      value: 'card',
-    },
-  ],
-  selectOptions: [
-    {
-      text: 'Почта России',
-      value: 'post',
-    },
-    {
-      text: 'СДЭК',
-      value: 'sdek',
-    },
-    {
-      text: 'Курьер',
-      value: 'courier',
-    },
-  ]
-});
-
-const form = reactive({
-  isSubscribed: true,
-  paymentMethod: '',
-  deliveryMethod: 'post',
-});
-
-const schema = object().shape(
-  {
-    city: string().required(),
-    street: string().required(),
-    house: number().required(),
-    flat: number().notRequired(),
-    postcode: number().min(6).required(),
-    message: string().default('').notRequired(),
-    surname: string().required(),
-    name: string().required(),
-    patronymic: string().required(),
-    phone: number().required(),
-    email: string().email().required(),
-  },
-);
-
 let isFormSubmitted = ref(false);
 
-async function onSubmit(values) {
-  let orderForm = {
-    ...values,
-    isSubscribed: form.isSubscribed,
-    paymentMethod: form.paymentMethod,
-    deliveryMethod: form.deliveryMethod,
-  };
-
-  try {
-    const response = await createOrderForProducts(orderForm);
-
-    if (response.ok) {
-      isFormSubmitted.value = true;
-    }
-
-  } catch (error) {
-    console.error('There was an error!', error);
-  }
-};
-
-function onInvalidSubmit() {
-  const submitBtn = document.querySelector('.submit-button');
-  submitBtn.classList.add('invalid');
-  setTimeout(() => {
-    submitBtn.classList.remove('invalid');
-  }, 1000);
-}
 </script>
 
 <template>
   <div :class="$style.root">
     <ContentContainer>
-      <Form
-        v-if="!isFormSubmitted"
-        :class="$style.wrapper"
-        @submit="onSubmit"
-        :validation-schema="schema"
-        @invalid-submit="onInvalidSubmit"
-      >
-        <div :class="$style.column">
-          <p :class="$style.title">{{ receiving }}</p>
-          <div :class="$style.fieldsRow">
-            <BaseInput
-              :placeholder="placeholder.city"
-              name="city"
-              type="text"
-              :class="$style.fieldCity"
-            />
-          </div>
-          <div :class="$style.fieldsRow">
-            <BaseSelect v-model="form.deliveryMethod" :options="placeholder.selectOptions" />
-          </div>
-          <div :class="$style.fieldsRow">
-            <BaseInput
-              :placeholder="placeholder.street"
-              name="street"
-              type="text"
-              :class="$style.fieldStreet"
-            />
-            <BaseInput
-              :placeholder="placeholder.houseNumber"
-              name="house"
-              type="number"
-              :class="$style.fieldHouse"
-            />
-            <BaseInput
-              :placeholder="placeholder.flatNumber"
-              name="flat"
-              type="number"
-              :class="$style.fieldFlat"
-            />
-            <BaseInput
-              :placeholder="placeholder.postcode"
-              name="postcode"
-              type="number"
-              :class="$style.fieldPostcode"
-            />
-          </div>
-          <div :class="$style.fieldsRow">
-            <BaseInput
-              :placeholder="placeholder.message"
-              name="message"
-              type="text"
-              :class="$style.fieldMessage"
-            />
-          </div>
-          <p :class="$style.title">{{ userInfo }}</p>
-          <div :class="$style.fieldsRow">
-            <BaseInput
-              :placeholder="placeholder.surname"
-              name="surname"
-              type="text"
-              :class="$style.fieldSurname"
-            />
-            <BaseInput
-              :placeholder="placeholder.name"
-              name="name"
-              type="text"
-              :class="$style.fieldName"
-            />
-            <BaseInput
-              :placeholder="placeholder.patronymic"
-              name="patronymic"
-              type="text"
-              :class="$style.fieldPatronymic"
-            />
-          </div>
-          <div :class="$style.fieldsRow">
-            <BaseInput
-              :placeholder="placeholder.phone"
-              name="phone"
-              type="tel"
-              :class="$style.fieldPhone"
-            />
-          </div>
-          <div :class="$style.fieldsRow">
-            <BaseInput
-              :placeholder="placeholder.email"
-              name="email"
-              type="email"
-              :class="$style.fieldEmail"
-            />
-          </div>
-          <div :class="$style.fieldsRow">
-            <BaseCheckbox v-model="form.isSubscribed" :label="placeholder.checkboxLabel" />
-          </div>
-          <p :class="$style.title">{{ paymentMethod }}</p>
-          <div :class="$style.fieldsRow">
-            <BaseRadioButtonsGroup v-model="form.paymentMethod" :items="placeholder.radioItems"/>
-          </div>
-        </div>
-        <div :class="$style.column">
-          <div :class="$style.orderDetails">
-            <p :class="$style.title">{{ orderDetails }}</p>
-            <BaseButton class="submit-button" type="submit">{{ submitButtonText }}</BaseButton>
-          </div>
-        </div>
-      </Form>
+      <CartForm v-if="!isFormSubmitted" @success="isFormSubmitted = true" />
       <div v-else :class="$style.success">
         <p :class="$style.thanksText">{{ thanksText }}</p>
         <p :class="$style.description">{{ description }}</p>
@@ -254,6 +49,10 @@ function onInvalidSubmit() {
   flex-direction: column;
   gap: 24px;
   width: calc((100% - 100px) / 2);
+}
+
+.column_right {
+  gap: 48px;
 }
 
 .title {

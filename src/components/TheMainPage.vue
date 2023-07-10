@@ -4,7 +4,7 @@ import { getAllProducts } from '../api/products';
 import InfoToolbar from './InfoToolbar.vue';
 import MainIntro from './main-intro/MainIntro.vue';
 import ProductList from './ProductList.vue';
-import BaseInput from './base/BaseInput.vue';
+import BaseSearchInput from './base/BaseSearchInput.vue';
 
 const placeholder = ref('Поиск товара');
 const searchText = ref('');
@@ -16,7 +16,8 @@ onMounted(async () => {
 
 function filteredProducts() {
   return products.value.filter((product) =>
-    product.title.toLowerCase().includes(searchText.value.toLowerCase()) ||
+    isNaN(Number(searchText.value.toLowerCase())) ?
+    product.title.toLowerCase().includes(searchText.value.toLowerCase()) :
     product.price.toString().startsWith(searchText.value.toLowerCase())
   );
 }
@@ -25,7 +26,7 @@ function filteredProducts() {
 <template>
   <div>
     <InfoToolbar>
-      <BaseInput v-model="searchText" :class="$style.search" type="search" :placeholder="placeholder" />
+      <BaseSearchInput v-model="searchText" :class="$style.search" type="search" :placeholder="placeholder" />
     </InfoToolbar>
     <MainIntro />
     <ProductList :products="filteredProducts()" />

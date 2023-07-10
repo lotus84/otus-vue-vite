@@ -67,3 +67,11 @@ body {
       transform: translateX(4px);
   }
 }
+
+a.header-link-active {
+  color: var(--kabul-color);
+}
+
+a.footer-link-active {
+  color: var(--copper-rose-color);
+}

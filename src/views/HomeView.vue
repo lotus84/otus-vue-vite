@@ -3,7 +3,5 @@ import TheMainPage from '../components/TheMainPage.vue';
 </script>
 
 <template>
-  <main>
-    <TheMainPage />
-  </main>
+  <TheMainPage />
 </template>
