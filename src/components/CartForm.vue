@@ -12,7 +12,6 @@ import BaseRadioButtonsGroup from './base/BaseRadioButtonsGroup.vue';
 import BaseSelect from './base/BaseSelect.vue';
 import CartItemsList from './CartItemsList.vue';
 
-
 const receiving = ref('Способ получения');
 const userInfo = ref('Данные получателя');
 const paymentMethod = ref('Способ оплаты');

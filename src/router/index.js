@@ -2,6 +2,22 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import HomeView from '../views/HomeView.vue';
 
+const ifNotAuthenticated = (to, from, next) => {
+  if (!isLoggedIn()) {
+    next()
+    return
+  }
+  next('/')
+}
+
+const ifAuthenticated = (to, from, next) => {
+  if (isLoggedIn()) {
+    next()
+    return
+  }
+  next('/login')
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
