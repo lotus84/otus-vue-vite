@@ -14,7 +14,7 @@ const { cartItems } = storeToRefs(cartStore);
   <div v-if="cartItems.length > 0" :class="$style.root">
     <p :class="$style.title">{{ orderComposition }}</p>
     <ul :class="$style.productList">
-      <li v-for="item, index in cartItems" :key="index" :class="$style.productItem">
+      <li v-for="item in cartItems" :key="item.id" :class="$style.productItem">
         <CartItem :item="item" />
       </li>
     </ul>
