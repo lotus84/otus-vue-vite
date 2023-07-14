@@ -1,8 +1,8 @@
 export async function getAllProducts() {
   const url = 'https://fakestoreapi.com/products';
-  let response = await fetch(url);
-  let products = await response.json();
-  return products;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
 }
 
 export async function getProductById(id) {

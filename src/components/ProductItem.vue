@@ -1,23 +1,29 @@
 <script setup>
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+import { useCartStore } from '../stores/cart';
 import BaseButton from './base/BaseButton.vue';
 import IconCart from './icons/IconCart.vue';
-
-const buttonText = ref('В корзину');
 
 const props = defineProps({
   product: {
     type: Object,
     required: true,
   },
-})
+});
 
-const emit = defineEmits(['add-to-cart']);
+const buttonText = 'В корзину';
+const alreadyInCart = 'Уже в корзине';
+
+const cartStore = useCartStore();
+
+const isProductInCart = computed(() => {
+  return cartStore.findItemById(Number(props.product.id))
+});
 
 function addToCart() {
-  emit('add-to-cart', props.product, 1);
-}
+  cartStore.addItemToCart(Number(props.product.id), 1)
+};
 </script>
 
 <template>
@@ -29,10 +35,16 @@ function addToCart() {
       <h3 :class="$style.title">{{ props.product.title }}</h3>
       <span :class="$style.price">{{ props.product.price }}$</span>
     </RouterLink>
-    <BaseButton :class="$style.addToCart" @click="addToCart()">
+    <BaseButton v-if="!isProductInCart" :class="$style.addToCart" @click="addToCart()">
       <IconCart />
       {{ buttonText }}
     </BaseButton>
+    <div v-else :class="$style.buttonsBox">
+      <p :class="$style.inCart">{{ alreadyInCart }}</p>
+      <BaseButton :class="$style.addToCart" @click="addToCart()">
+        +
+      </BaseButton>
+    </div>
   </div>
 </template>
 
@@ -93,5 +105,16 @@ function addToCart() {
   & svg {
     margin-right: 12px;
   }
+}
+
+.inCart {
+  font-weight: 600;
+  color: var(--copper-rose-color);
+}
+
+.buttonsBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

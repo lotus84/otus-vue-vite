@@ -1,6 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getProductById } from '../api/products';
+import { ref, computed } from 'vue';
+import { useCartStore } from '../stores/cart';
+import { useCatalogStore } from '../stores/catalog';
 import ContentContainer from './ContentContainer.vue';
 import BaseButton from './base/BaseButton.vue';
 
@@ -11,17 +12,29 @@ const props = defineProps({
   },
 })
 
-const addToCart = ref('Добавить в корзину');
+const addToCartText = 'Добавить в корзину';
+const alreadyInCart = 'Уже в корзине';
+
 const product = ref();
 
-onMounted(async () => {
-  product.value = await getProductById(props.id);
+const catalogStore = useCatalogStore();
+
+product.value = catalogStore.findProductById(Number(props.id));
+
+const cartStore = useCartStore();
+
+const isProductInCart = computed(() => {
+  return cartStore.findItemById(Number(props.id))
 });
+
+function addToCart() {
+  cartStore.addItemToCart(Number(props.id), 1)
+};
 
 </script>
 
 <template>
-  <div :class="$style.root">
+  <div v-if="product" :class="$style.root">
     <ContentContainer>
       <div :class="$style.wrapper">
         <div :class="$style.imgBox">
@@ -33,7 +46,11 @@ onMounted(async () => {
           <p :class="$style.description">{{ product?.description }}</p>
           <div :class="$style.priceBox">
             <span :class="$style.price">{{ product?.price }}$</span>
-            <BaseButton>{{ addToCart }}</BaseButton>
+            <BaseButton v-if="!isProductInCart" @click="addToCart()">{{ addToCartText }}</BaseButton>
+            <div v-else :class="$style.buttonBox">
+              <p :class="$style.inCart">{{ alreadyInCart }}</p>
+              <BaseButton @click="addToCart()"> + </BaseButton>
+            </div>
           </div>
         </div>
       </div>
@@ -106,5 +123,17 @@ onMounted(async () => {
   font-size: 28px;
   font-weight: 600;
   line-height: 150%;
+}
+
+.buttonBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.inCart {
+  font-weight: 600;
+  color: var(--copper-rose-color);
 }
 </style>

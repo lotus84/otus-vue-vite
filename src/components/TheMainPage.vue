@@ -1,18 +1,20 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getAllProducts } from '../api/products';
+import { ref } from 'vue';
+import { useCatalogStore } from '../stores/catalog';
 import InfoToolbar from './InfoToolbar.vue';
 import MainIntro from './main-intro/MainIntro.vue';
 import ProductList from './ProductList.vue';
 import BaseSearchInput from './base/BaseSearchInput.vue';
+import FloatCartButton from './FloatCartButton.vue';
 
 const placeholder = ref('Поиск товара');
 const searchText = ref('');
+
+const catalogStore = useCatalogStore();
+
 let products = ref([]);
 
-onMounted(async () => {
-  products.value = await getAllProducts();
-});
+products.value = catalogStore.products;
 
 function filteredProducts() {
   return products.value.filter((product) =>
@@ -29,7 +31,9 @@ function filteredProducts() {
       <BaseSearchInput v-model="searchText" :class="$style.search" type="search" :placeholder="placeholder" />
     </InfoToolbar>
     <MainIntro />
-    <ProductList :products="filteredProducts()" />
+    <ProductList v-if="!catalogStore.isLoading" :products="filteredProducts()" />
+    <p v-else>Loading ...</p>
+    <FloatCartButton />
   </div>
 </template>
 

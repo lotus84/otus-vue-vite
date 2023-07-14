@@ -8,8 +8,8 @@ defineProps({
   products: {
     type: Array,
     required: true,
-  }
-})
+  },
+});
 
 function handleAddToCart(item, quantity) {
   const itemObject = {

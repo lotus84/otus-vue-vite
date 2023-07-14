@@ -1,22 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { isLoggedIn } from '../utils/index'
-import HomeView from '../views/HomeView.vue'
-
-const ifNotAuthenticated = (to, from, next) => {
-  if (!isLoggedIn()) {
-    next()
-    return
-  }
-  next('/')
-}
-
-const ifAuthenticated = (to, from, next) => {
-  if (isLoggedIn()) {
-    next()
-    return
-  }
-  next('/login')
-}
+import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,18 +25,26 @@ const router = createRouter({
       path: '/add-item',
       name: 'add-item',
       component: () => import('../views/AddNewItemView.vue'),
-      beforeEnter: ifAuthenticated,
+      meta: { requiresAuth: true },
     },
     {
       path: '/login',
       name: 'login',
       component: () => import('../views/TheLogginView.vue'),
-      beforeEnter: ifNotAuthenticated,
     },
   ],
   scrollBehavior (to, from, savedPosition) {
     return { top: 0 };
   },
+})
+
+router.beforeEach((to) => {
+
+  const authStore = useAuthStore();
+
+  authStore.getAuthToken();
+
+  if (to.meta.requiresAuth && !authStore.isLoggedIn()) return '/login';
 })
 
 export default router

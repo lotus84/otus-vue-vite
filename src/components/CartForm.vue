@@ -1,5 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useCartStore } from '../stores/cart';
 import { Form } from 'vee-validate';
 import { object, string, number } from 'yup';
 import { createOrderForProducts } from '../api/order';
@@ -54,6 +56,11 @@ const placeholder = {
     },
   ]
 };
+
+const total = 'Итого: ';
+
+const cartStore = useCartStore();
+const { totalSum } = storeToRefs(cartStore);
 
 const form = reactive({
   isSubscribed: true,
@@ -211,6 +218,7 @@ function onInvalidSubmit() {
       <CartItemsList />
       <div :class="$style.orderDetails">
         <p :class="$style.title">{{ orderDetails }}</p>
+        <p :class="$style.total">{{ total + totalSum }}$</p>
         <BaseButton class="submit-button" type="submit">{{ submitButtonText }}</BaseButton>
       </div>
     </div>
@@ -268,5 +276,12 @@ function onInvalidSubmit() {
   padding: 40px;
   border-radius: 20px;
   background-color: var(--gainsboro-color);
+}
+
+.total {
+  text-align: left;
+  font-size: 52px;
+  font-weight: 600;
+  line-height: 150%;
 }
 </style>

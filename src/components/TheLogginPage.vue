@@ -3,10 +3,12 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { Form } from 'vee-validate';
 import { object, string } from 'yup';
-import { setAuthToken, clearAuthToken } from '../utils/index';
+import { useAuthStore } from '../stores/auth';
 import ContentContainer from './ContentContainer.vue';
 import BaseInput from './base/BaseInput.vue';
 import BaseButton from './base/BaseButton.vue';
+
+const authStore =  useAuthStore();
 
 const title = ref('Войти в личный кабинет');
 const placeholder = reactive({
@@ -24,15 +26,15 @@ const schema = object().shape(
 
 const router = useRouter();
 
-async function onSubmit() {
-  setAuthToken();
-  router.push('add-item');
+async function onSubmit(event) {
+  authStore.setAuthToken(event.username);
+  router.push({ name: 'add-item' });
 };
 
 function onInvalidSubmit() {
   const submitBtn = document.querySelector('.submit-button');
 
-  clearAuthToken();
+  authStore.clearAuthToken();
 
   submitBtn.classList.add('invalid');
   setTimeout(() => {
