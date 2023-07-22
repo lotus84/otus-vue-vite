@@ -7,7 +7,12 @@ import IconCross from '../icons/IconCross.vue';
 <template>
   <BaseOverlay @close="$emit('close')">
     <div :class="$style.modalWrapper">
-      <button :class="$style.closeButton" type="button" @click="$emit('close')">
+      <button
+        :class="$style.closeButton"
+        type="button"
+        data-testid="close-button"
+        @click="$emit('close')"
+      >
         <IconCross />
       </button>
       <slot />
