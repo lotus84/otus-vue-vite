@@ -27,7 +27,7 @@ function addToCart() {
 </script>
 
 <template>
-  <div :class="$style.root">
+  <div :class="$style.root" :data-testid="`product-item-${props.product.id}`">
     <RouterLink :class="$style.link" :to="{ name: 'item', params: { id: props.product.id }}">
       <div :class="$style.imageBox">
         <img :src="props.product.image" alt="">

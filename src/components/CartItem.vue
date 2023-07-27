@@ -38,20 +38,28 @@ function deleteItemFromCart() {
 </script>
 
 <template>
-  <div :class="$style.root">
+  <div :class="$style.root" :data-testid="`cart-item-${itemInCatalog.id}`">
     <div :class="$style.imgBox">
       <img :src="itemInCatalog.image" alt="">
     </div>
     <h3 :class="$style.title">{{ itemInCatalog.title }}</h3>
-    <BaseButton :class="$style.button" @click="removeFromCart()">
+    <BaseButton
+      :class="$style.button"
+      :data-testid="`cart-item-decrease-button-${itemInCatalog.id}`"
+      @click="removeFromCart()"
+    >
       -
     </BaseButton>
-    <div :class="$style.count">{{ props.item.count }}</div>
-    <BaseButton :class="$style.button" @click="addToCart()">
+    <div :class="$style.count" :data-testid="`cart-item-count-${itemInCatalog.id}`">{{ props.item.count }}</div>
+    <BaseButton
+      :class="$style.button"
+      :data-testid="`cart-item-increase-button-${itemInCatalog.id}`"
+      @click="addToCart()"
+    >
       +
     </BaseButton>
     <span :class="$style.price">{{ sum }}$</span>
-    <BaseButton @click="deleteItemFromCart()">
+    <BaseButton :data-testid="`cart-item-delete-button-${itemInCatalog.id}`" @click="deleteItemFromCart()">
       <IconDelete />
     </BaseButton>
   </div>

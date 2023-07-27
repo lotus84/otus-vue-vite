@@ -11,7 +11,7 @@ const { cartItems } = storeToRefs(cartStore);
 </script>
 
 <template>
-  <div v-if="cartItems.length > 0" :class="$style.root">
+  <div v-if="cartItems.length > 0" :class="$style.root" data-testid="cart-items-list">
     <p :class="$style.title">{{ orderComposition }}</p>
     <ul :class="$style.productList">
       <li v-for="item in cartItems" :key="item.id" :class="$style.productItem">
