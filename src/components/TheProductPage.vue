@@ -46,7 +46,7 @@ function addToCart() {
           <p :class="$style.description">{{ product?.description }}</p>
           <div :class="$style.priceBox">
             <span :class="$style.price">{{ product?.price }}$</span>
-            <BaseButton v-if="!isProductInCart" @click="addToCart()">{{ addToCartText }}</BaseButton>
+            <BaseButton v-if="!isProductInCart" @click="addToCart()" data-testid="add-to-cart-button">{{ addToCartText }}</BaseButton>
             <div v-else :class="$style.buttonBox">
               <p :class="$style.inCart">{{ alreadyInCart }}</p>
               <BaseButton @click="addToCart()"> + </BaseButton>

@@ -17,6 +17,7 @@ const userInfo = ref('Данные получателя');
 const paymentMethod = ref('Способ оплаты');
 const submitButtonText = ref('Оформить заказ');
 const orderDetails = ref('Подробности заказа');
+const total = 'Итого: ';
 
 const placeholder = {
   city: 'Город',
@@ -56,8 +57,6 @@ const placeholder = {
     },
   ]
 };
-
-const total = 'Итого: ';
 
 const cartStore = useCartStore();
 const { totalSum } = storeToRefs(cartStore);

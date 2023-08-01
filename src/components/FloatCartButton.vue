@@ -23,7 +23,7 @@ const totalItemsInCart = computed(() => {
   <BaseButton v-if="!isCartEmpty" :class="$style.root" type="button">
     <IconCart />
     {{ cart }}
-    <span :class="$style.count">{{ totalItemsInCart }}</span>
+    <span :class="$style.count" data-testid="cart-counter">{{ totalItemsInCart }}</span>
   </BaseButton>
 </template>
 

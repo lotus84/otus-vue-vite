@@ -13,6 +13,11 @@ export default mergeConfig(
       transformMode: {
         web: [/\.[jt]sx$/],
       },
+      css: {
+        modules: {
+          classNameStrategy: 'non-scoped',
+        },
+      },
     }
   })
 )
